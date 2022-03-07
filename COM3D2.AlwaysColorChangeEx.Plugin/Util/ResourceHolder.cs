@@ -136,16 +136,16 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.Util
         }
         */
 
-        public Texture2D LoadTex(string name
-
-            )
+        public Texture2D LoadTex(string name)
         {
             try
             {
-
+#if v2022
                 using (var fs = asmbl.GetManifestResourceStream("CM3D2.AlwaysColorChangeEx.Plugin.Resources." + name + ".png"))
+#else
+                using (var fs = asmbl.GetManifestResourceStream(name + ".png"))
+#endif
                 {
-
                     var tex2d = fileUtil.LoadTexture(fs);
                     tex2d.name = name; ;
                     LogUtil.Debug("resource file image loaded :", name);
