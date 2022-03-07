@@ -13,7 +13,11 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.UI {
         public static Texture2D PresetBaseIcon {
             get {
                 if (presetBaseIcon == null) {
-                    presetBaseIcon = ResourceHolder.Instance.LoadTex("preset_base");
+                    presetBaseIcon = ResourceHolder.Instance.LoadTex("preset_base" 
+                        #if v2022 
+                        , Properties.Resources.preset_base
+                        #endif
+                        );
                 }
                 return presetBaseIcon;
             }
@@ -22,7 +26,11 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.UI {
         public static Texture2D PresetEmptyIcon {
             get {
                 if (presetEmptyIcon == null) {
-                    presetEmptyIcon = ResourceHolder.Instance.LoadTex("preset_empty");
+                    presetEmptyIcon = ResourceHolder.Instance.LoadTex("preset_empty"
+#if v2022
+                        , Properties.Resources.preset_empty
+#endif
+                        );
                 }
                 return presetEmptyIcon;
             }
@@ -31,7 +39,11 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.UI {
         public static Texture2D PresetFocusIcon {
             get {
                 if (presetFocusIcon == null) {
-                    presetFocusIcon = ResourceHolder.Instance.LoadTex("preset_focus");
+                    presetFocusIcon = ResourceHolder.Instance.LoadTex("preset_focus"
+#if v2022
+                        , Properties.Resources.preset_focus
+#endif
+                        );
                 }
                 return presetFocusIcon;
             }

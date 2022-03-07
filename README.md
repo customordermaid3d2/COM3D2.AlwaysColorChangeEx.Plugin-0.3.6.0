@@ -1,5 +1,9 @@
 CM3D2.AlwaysColorChangeEx.Plugin
 ---
+Visual Studio 2022 Converting version
+
+
+---
 
 パーツごとに色変更やパラメータ調整を可能とするプラグインです。  
 不具合が残っている可能性もありますし、本来設定しない値に設定できてしまう可能性もあります。  

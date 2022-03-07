@@ -3,9 +3,11 @@ using System.Text;
 using CM3D2.AlwaysColorChangeEx.Plugin.Util;
 using UnityEngine;
 
-namespace CM3D2.AlwaysColorChangeEx.Plugin.UI {
+namespace CM3D2.AlwaysColorChangeEx.Plugin.UI
+{
 
-    public class ColorPicker {
+    public class ColorPicker
+    {
         #region Fields/Properties
         private readonly ColorPresetManager _presetMgr;
 
@@ -19,9 +21,12 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.UI {
         private bool _lightDragging;
 
         private Color _color;
-        public Color Color {
-            set {
-                if (_color != value) {
+        public Color Color
+        {
+            set
+            {
+                if (_color != value)
+                {
                     _color = value;
                     Light = Math.Max(_color.r, Math.Max(_color.g, _color.b));
                     SearchPos(MapTex, ref _color, out _pos);
@@ -34,9 +39,12 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.UI {
 
         /// <summary>輝度(0-1)</summary>
         private float _light;
-        public float Light {
-            set {
-                if (!Equals(_light, value)) {
+        public float Light
+        {
+            set
+            {
+                if (!Equals(_light, value))
+                {
                     Transfer(MapBaseTex, MapTex, value);
                     _light = value;
                 }
@@ -44,19 +52,24 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.UI {
             get { return _light; }
         }
 
-        private void SearchPos(Texture2D tex, ref Color col, out Vector2 destPos) {
+        private void SearchPos(Texture2D tex, ref Color col, out Vector2 destPos)
+        {
             var min = 3f;
             var minx = 0;
             var miny = 0;
-            for (var x = 0; x < tex.width; x++) {
-                for (var y = 0; y < tex.height; y++) {
+            for (var x = 0; x < tex.width; x++)
+            {
+                for (var y = 0; y < tex.height; y++)
+                {
                     var dist = DiffColor(tex.GetPixel(x, y), col);
-                    if (dist < 0.001f) {
+                    if (dist < 0.001f)
+                    {
                         destPos.x = x;
                         destPos.y = tex.height - 1 - y;
                         return;
                     }
-                    if (dist < min) {
+                    if (dist < min)
+                    {
                         min = dist;
                         minx = x;
                         miny = y;
@@ -67,11 +80,13 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.UI {
             destPos.y = tex.height - 1 - miny;
         }
 
-        private void Transfer(Texture2D srcTex, Texture2D dstTex, float ratio) {
+        private void Transfer(Texture2D srcTex, Texture2D dstTex, float ratio)
+        {
             var src = srcTex.GetPixels32(0);
             var dst = dstTex.GetPixels32(0);
             var maxIndex = dstTex.width * dstTex.height;
-            for (var i = 0; i < maxIndex; i++) {
+            for (var i = 0; i < maxIndex; i++)
+            {
                 dst[i].r = (byte)(src[i].r * ratio);
                 dst[i].g = (byte)(src[i].g * ratio);
                 dst[i].b = (byte)(src[i].b * ratio);
@@ -83,10 +98,13 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.UI {
 
         // 色テクスチャ(透過を含まないRGBのみの色を表示)
         private Texture2D _colorTex;
-        public Texture2D ColorTex {
+        public Texture2D ColorTex
+        {
             set { _colorTex = value; }
-            get {
-                if (_colorTex == null) {
+            get
+            {
+                if (_colorTex == null)
+                {
                     _colorTex = new Texture2D(16, 16, TextureFormat.RGB24, false);
                 }
                 return _colorTex;
@@ -94,9 +112,12 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.UI {
         }
 
         private Texture2D _mapTex;
-        public Texture2D MapTex {
-            get {
-                if (_mapTex == null) {
+        public Texture2D MapTex
+        {
+            get
+            {
+                if (_mapTex == null)
+                {
                     var baseTex = MapBaseTex;
                     _mapTex = new Texture2D(baseTex.width, baseTex.height, baseTex.format, false);
                     Transfer(MapBaseTex, _mapTex, _light);
@@ -106,35 +127,40 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.UI {
         }
 
         private GUILayoutOption _iconWidth;
-        public GUILayoutOption IconWidth {
+        public GUILayoutOption IconWidth
+        {
             get { return _iconWidth ?? (_iconWidth = GUILayout.Width(ColorTex.width)); }
         }
 
-        private Color GetMapColor(int x, int y) {
+        private Color GetMapColor(int x, int y)
+        {
             return MapTex.GetPixel(x, MapTex.height - y);
         }
-        
+
         private GUIStyle _texStyle;
-        public GUIStyle TexStyle {
+        public GUIStyle TexStyle
+        {
             set { _texStyle = value; }
-            get { return _texStyle ?? (_texStyle = new GUIStyle {normal = {background = MapTex}}); }
+            get { return _texStyle ?? (_texStyle = new GUIStyle { normal = { background = MapTex } }); }
         }
         private GUIStyle _texLightStyle;
-        public GUIStyle TexLightStyle {
+        public GUIStyle TexLightStyle
+        {
             set { _texLightStyle = value; }
-            get { return _texLightStyle ?? (_texLightStyle = new GUIStyle {normal = {background = LightTex}}); }
+            get { return _texLightStyle ?? (_texLightStyle = new GUIStyle { normal = { background = LightTex } }); }
         }
 
         private readonly StringBuilder _colorCode = new StringBuilder(7);
         public string ColorCode { get; private set; }
 
-        public bool SetColorCode(string code) {
+        public bool SetColorCode(string code)
+        {
             if (!IsColorCode(code)) return false;
 
             var r = Uri.FromHex(code[1]) * 16 + Uri.FromHex(code[2]);
             var g = Uri.FromHex(code[3]) * 16 + Uri.FromHex(code[4]);
             var b = Uri.FromHex(code[5]) * 16 + Uri.FromHex(code[6]);
-            Color = new Color(r/255f, g/255f, b/255f, _color.a);
+            Color = new Color(r / 255f, g / 255f, b / 255f, _color.a);
 
             return true;
         }
@@ -150,25 +176,33 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.UI {
         public static int size = 256;
 
         private static Texture2D mapBaseTex;
-        public static Texture2D MapBaseTex {
-            set {
-                if (value != null) {
+        public static Texture2D MapBaseTex
+        {
+            set
+            {
+                if (value != null)
+                {
                     mapBaseTex = value;
                     size = Math.Min(mapBaseTex.width, mapBaseTex.height);
                 }
             }
-            get {
-                if (mapBaseTex == null) {
-                    mapBaseTex = CreateRGBMapTex(size+1, size+1);
+            get
+            {
+                if (mapBaseTex == null)
+                {
+                    mapBaseTex = CreateRGBMapTex(size + 1, size + 1);
                 }
                 return mapBaseTex;
             }
         }
 
         private static Texture2D lightTex;
-        public static Texture2D LightTex {
-            get {
-                if (lightTex == null) {
+        public static Texture2D LightTex
+        {
+            get
+            {
+                if (lightTex == null)
+                {
                     lightTex = CreateLightTex(16, size, FRAME_WIDTH);
                 }
                 return lightTex;
@@ -176,32 +210,50 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.UI {
         }
 
         private static Texture2D circleTex;
-        public static Texture2D CircleTex {
-            get {
-                if (circleTex == null) {
-                    circleTex = ResourceHolder.Instance.LoadTex("circle");
+        public static Texture2D CircleTex
+        {
+            get
+            {
+                if (circleTex == null)
+                {
+                    circleTex = ResourceHolder.Instance.LoadTex("circle"
+#if v2022
+                        , Properties.Resources.circle
+#endif
+                        );
                 }
                 return circleTex;
             }
         }
         private static Texture2D crossTex;
-        public static Texture2D CrossTex {
-            get {
-                if (crossTex == null) {
-                    crossTex = ResourceHolder.Instance.LoadTex("cross");
+        public static Texture2D CrossTex
+        {
+            get
+            {
+                if (crossTex == null)
+                {
+                    crossTex = ResourceHolder.Instance.LoadTex("cross"
+#if v2022
+                        , Properties.Resources.cross
+#endif
+                        );
                 }
                 return crossTex;
             }
         }
 
-        public static bool HasColorCodeClip() {
+        public static bool HasColorCodeClip()
+        {
             var clip = ClipBoardHandler.Instance.GetClipboard();
             return IsColorCode(clip);
         }
 
-        public static bool IsColorCode(string code) {
-            if (code.Length == 7 && code[0] == '#') {
-                for (var i = 1; i < 7; i++) {
+        public static bool IsColorCode(string code)
+        {
+            if (code.Length == 7 && code[0] == '#')
+            {
+                for (var i = 1; i < 7; i++)
+                {
                     if (!Uri.IsHexDigit(code[i])) return false;
                 }
                 return true;
@@ -209,23 +261,26 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.UI {
             return false;
         }
 
-        public static Color GetColor(string code) {
+        public static Color GetColor(string code)
+        {
             if (!IsColorCode(code)) return Empty;
 
             var r = Uri.FromHex(code[1]) * 16 + Uri.FromHex(code[2]);
             var g = Uri.FromHex(code[3]) * 16 + Uri.FromHex(code[4]);
             var b = Uri.FromHex(code[5]) * 16 + Uri.FromHex(code[6]);
-            return new Color(r/255f, g/255f, b/255f);
+            return new Color(r / 255f, g / 255f, b / 255f);
         }
 
         #endregion
 
-        public ColorPicker(ColorPresetManager presetMgr=null) {
+        public ColorPicker(ColorPresetManager presetMgr = null)
+        {
             ColorCode = string.Empty;
             this._presetMgr = presetMgr;
         }
 
-        private void ToColorCode() {
+        private void ToColorCode()
+        {
             var r = (int)(_color.r * 255);
             var g = (int)(_color.g * 255);
             var b = (int)(_color.b * 255);
@@ -238,25 +293,30 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.UI {
             ColorCode = _colorCode.ToString();
         }
 
-        public void SetTexColor(ref Color col) {
+        public void SetTexColor(ref Color col)
+        {
             SetTexColor(ref col, texEdgeSize);
         }
 
-        public void SetTexColor(ref Color col, int frame) {
+        public void SetTexColor(ref Color col, int frame)
+        {
             var tex = (_colorTex == null) ? ColorTex : _colorTex;
-            var blockWidth  = tex.width - frame * 2;
+            var blockWidth = tex.width - frame * 2;
             var blockHeight = tex.height - frame * 2;
             var pixels = tex.GetPixels(frame, frame, blockWidth, blockHeight, 0);
-            for (var i = 0; i< pixels.Length; i++) {
+            for (var i = 0; i < pixels.Length; i++)
+            {
                 pixels[i] = col;
             }
             tex.SetPixels(frame, frame, blockWidth, blockHeight, pixels);
             tex.Apply();
         }
 
-        public bool DrawLayout() {
+        public bool DrawLayout()
+        {
             GUILayout.BeginHorizontal();
-            try {
+            try
+            {
                 if (GUILayout.Button(CrossTex, labelStyle, labelWidth)) expand = false;
 
                 GUILayout.Label(string.Empty, TexStyle, GUILayout.Width(_mapTex.width), GUILayout.Height(_mapTex.height));
@@ -269,86 +329,113 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.UI {
                 GUILayout.Space(20f);
                 GUILayout.Label(string.Empty, TexLightStyle, GUILayout.Width(lightTex.width), GUILayout.Height(lightTex.height));
                 lastRect = GUILayoutUtility.GetLastRect();
-                GUI.DrawTexture(new Rect(lastRect.x+FRAME_WIDTH, lastRect.y + (size-1)*(1-_light) - offset+FRAME_WIDTH, tex.width, tex.height), tex, ScaleMode.StretchToFill, true, 0f);
+                GUI.DrawTexture(new Rect(lastRect.x + FRAME_WIDTH, lastRect.y + (size - 1) * (1 - _light) - offset + FRAME_WIDTH, tex.width, tex.height), tex, ScaleMode.StretchToFill, true, 0f);
 
                 changed |= LightSliderEvent(ref lastRect);
 
-                if (_presetMgr != null) {
+                if (_presetMgr != null)
+                {
                     GUILayout.Space(5f);
                     changed |= DrawPresetLayout();
                 }
                 return changed;
-            } finally {
+            }
+            finally
+            {
                 GUILayout.EndHorizontal();
             }
         }
 
-        public bool DrawPresetLayout() {
+        public bool DrawPresetLayout()
+        {
             var changed = false;
             var e = Event.current;
             GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
-            try {
+            try
+            {
                 var startIdx = 0;
-                while (startIdx < _presetMgr.Count) {
+                while (startIdx < _presetMgr.Count)
+                {
                     GUILayout.BeginVertical();
-                    try {
+                    try
+                    {
                         var endIdx = (startIdx + 10 < _presetMgr.Count) ? startIdx + 10 : _presetMgr.Count;
-                        for (var i = startIdx; i < endIdx; i++) {
+                        for (var i = startIdx; i < endIdx; i++)
+                        {
                             var presetIcon = _presetMgr.presetIcons[i];
                             GUILayout.Label(presetIcon, _presetMgr.IconStyle);
 
-                            if (_selectedPreset == i) {
+                            if (_selectedPreset == i)
+                            {
                                 var lastRect = GUILayoutUtility.GetLastRect();
                                 var tex = ColorPresetManager.PresetFocusIcon;
                                 GUI.DrawTexture(new Rect(lastRect.x + 1, lastRect.y + 2, tex.width, tex.height), tex, ScaleMode.StretchToFill, true, 0f);
                             }
 
-                            if (e.type == EventType.MouseDown && (e.button == 0 || e.button == 1)) {
+                            if (e.type == EventType.MouseDown && (e.button == 0 || e.button == 1))
+                            {
                                 var mousePos = e.mousePosition;
-                                if (GUILayoutUtility.GetLastRect().Contains(mousePos)) {
-                                    switch (e.button) {
-                                    case 1: // right click
-                                        _presetMgr.ClearColor(_selectedPreset);
-                                        _selectedPreset = i;
-                                        break;
-                                    case 0: // left click
-                                        if (_selectedPreset == i) {
-                                            var code = _presetMgr.presetCodes[i];
-                                            SetColorCode(code);
-                                            changed = true;
-                                        } else {
+                                if (GUILayoutUtility.GetLastRect().Contains(mousePos))
+                                {
+                                    switch (e.button)
+                                    {
+                                        case 1: // right click
+                                            _presetMgr.ClearColor(_selectedPreset);
                                             _selectedPreset = i;
-                                        }
-                                        break;
+                                            break;
+                                        case 0: // left click
+                                            if (_selectedPreset == i)
+                                            {
+                                                var code = _presetMgr.presetCodes[i];
+                                                SetColorCode(code);
+                                                changed = true;
+                                            }
+                                            else
+                                            {
+                                                _selectedPreset = i;
+                                            }
+                                            break;
                                     }
                                 }
                             }
                         }
-                    } finally {
+                    }
+                    finally
+                    {
                         GUILayout.EndVertical();
                     }
                     startIdx += 10;
                 }
-            } finally {
+            }
+            finally
+            {
                 GUILayout.EndHorizontal();
             }
 
             GUILayout.BeginHorizontal();
-            try {
+            try
+            {
                 GUI.enabled = _selectedPreset != -1;
-                try {
-                    if (GUILayout.Button("Save", _presetMgr.BtnStyle, _presetMgr.BtnWidth)) {
+                try
+                {
+                    if (GUILayout.Button("Save", _presetMgr.BtnStyle, _presetMgr.BtnWidth))
+                    {
                         _presetMgr.SetColor(_selectedPreset, ColorCode, ref _color);
                     }
 
-                    if (GUILayout.Button("Delete", _presetMgr.BtnStyle, _presetMgr.BtnWidth)) {
+                    if (GUILayout.Button("Delete", _presetMgr.BtnStyle, _presetMgr.BtnWidth))
+                    {
                         _presetMgr.ClearColor(_selectedPreset);
                     }
-                } finally {
+                }
+                finally
+                {
                     GUI.enabled = true;
                 }
-            } finally {
+            }
+            finally
+            {
                 GUILayout.EndHorizontal();
             }
             GUILayout.EndVertical();
@@ -356,51 +443,63 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.UI {
             return changed;
         }
 
-        public bool DrawPicker(ref Rect rect) {
+        public bool DrawPicker(ref Rect rect)
+        {
             GUI.Label(rect, string.Empty, TexStyle);
             var tex = CircleTex;
             var offset = tex.width * 0.5f;
-            GUI.DrawTexture(new Rect(rect.x + _pos.x-offset, rect.y + _pos.y-offset, tex.width, tex.height), tex, ScaleMode.StretchToFill, true, 0f);
+            GUI.DrawTexture(new Rect(rect.x + _pos.x - offset, rect.y + _pos.y - offset, tex.width, tex.height), tex, ScaleMode.StretchToFill, true, 0f);
 
             return MapPickerEvent(ref rect);
         }
 
-        private bool MapPickerEvent(ref Rect rect) {
+        private bool MapPickerEvent(ref Rect rect)
+        {
             if (_lightDragging) return false;
 
             var e = Event.current;
-            if (e.button == 0 && (e.type == EventType.MouseDown || e.type == EventType.MouseDrag)) {
+            if (e.button == 0 && (e.type == EventType.MouseDown || e.type == EventType.MouseDrag))
+            {
 
                 var mousePos = e.mousePosition;
-                if (_mapDragging || rect.Contains(mousePos)) {
-                    var x = (int) (mousePos.x - rect.x);
-                    var y = (int) (mousePos.y - rect.y);
+                if (_mapDragging || rect.Contains(mousePos))
+                {
+                    var x = (int)(mousePos.x - rect.x);
+                    var y = (int)(mousePos.y - rect.y);
 
                     Color col;
-                    if (_mapDragging) {
+                    if (_mapDragging)
+                    {
                         var centerX = _mapTex.width / 2;
-                        var centerY = Mathf.CeilToInt(_mapTex.height/ 2f); // Y軸反転のため、奇数の場合は切り上げ
+                        var centerY = Mathf.CeilToInt(_mapTex.height / 2f); // Y軸反転のため、奇数の場合は切り上げ
                         var radius = Math.Min(centerX, centerY);
                         var dist = Distance(x, y, centerX, centerY);
-                        if (dist <= radius) {
+                        if (dist <= radius)
+                        {
                             col = GetMapColor(x, y);
-                        } else {
+                        }
+                        else
+                        {
                             // ドラッグ時は範囲を逸脱しても、角度を元に外周色に設定
                             col = GetEdgeColor(x - centerX, -(y - centerY), dist) * _light;
                             col.a = 1f;
                             var mul = radius / dist;
                             // 位置も外周に合わせて補正
-                            x = (int)((x-centerX) * mul) + centerX;
-                            y = (int)((y-centerY) * mul) + centerY;
+                            x = (int)((x - centerX) * mul) + centerX;
+                            y = (int)((y - centerY) * mul) + centerY;
                         }
 
-                    } else if (e.type == EventType.MouseDown) {
+                    }
+                    else if (e.type == EventType.MouseDown)
+                    {
                         col = GetMapColor(x, y);
                         // 透過色の場合は無視
                         if (Equals(col.a, 0f)) return false;
                         _mapDragging = true;
 
-                    } else {
+                    }
+                    else
+                    {
                         return false;
                     }
                     _color = col;
@@ -411,36 +510,43 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.UI {
                     e.Use();
                     return true;
                 }
-            } else if (_mapDragging && e.type == EventType.MouseUp) {
+            }
+            else if (_mapDragging && e.type == EventType.MouseUp)
+            {
                 _mapDragging = false;
             }
             return false;
         }
 
-        public void DrawLightScale(ref Rect rect) {
+        public void DrawLightScale(ref Rect rect)
+        {
             GUI.Label(rect, string.Empty, TexLightStyle);
             var tex = CircleTex;
             var offset = tex.width * 0.5f;
-            var circlePos = new Rect(rect.x+FRAME_WIDTH, rect.y + (size-1)*(1-_light)-offset+FRAME_WIDTH, tex.width, tex.height);
+            var circlePos = new Rect(rect.x + FRAME_WIDTH, rect.y + (size - 1) * (1 - _light) - offset + FRAME_WIDTH, tex.width, tex.height);
             GUI.DrawTexture(circlePos, tex, ScaleMode.StretchToFill, true, 0f);
 
             LightSliderEvent(ref rect);
         }
 
-        private bool LightSliderEvent(ref Rect rect) {
+        private bool LightSliderEvent(ref Rect rect)
+        {
             if (_mapDragging) return false;
 
             var e = Event.current;
-            if (e.button == 0 && (e.type == EventType.MouseDown || e.type == EventType.MouseDrag)) {
+            if (e.button == 0 && (e.type == EventType.MouseDown || e.type == EventType.MouseDrag))
+            {
 
                 var mousePos = e.mousePosition;
                 if (e.type == EventType.MouseDown && rect.Contains(mousePos)) _lightDragging = true;
-                if (_lightDragging) {
-                    var light1 = 1f - (mousePos.y - rect.y - 1)/size;
+                if (_lightDragging)
+                {
+                    var light1 = 1f - (mousePos.y - rect.y - 1) / size;
                     if (1f < light1) light1 = 1f;
                     else if (light1 < 0f) light1 = 0f;
 
-                    if (!Equals(_light, light1)) {
+                    if (!Equals(_light, light1))
+                    {
                         Light = light1;
 
                         _color = GetMapColor((int)_pos.x, (int)_pos.y);
@@ -451,37 +557,47 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.UI {
                     }
                     e.Use();
                 }
-            } else if (_lightDragging && e.type == EventType.MouseUp) {
+            }
+            else if (_lightDragging && e.type == EventType.MouseUp)
+            {
                 _lightDragging = false;
             }
 
             return false;
         }
 
-        private static Texture2D CreateLightTex(int width, int height, int frameWidth) {
-            var tex = new Texture2D(width+frameWidth*2, height+frameWidth*2, TextureFormat.RGB24, false);
+        private static Texture2D CreateLightTex(int width, int height, int frameWidth)
+        {
+            var tex = new Texture2D(width + frameWidth * 2, height + frameWidth * 2, TextureFormat.RGB24, false);
             var denom = height - 1;
             var frameCol = Color.gray;
-            for (var y = frameWidth; y < height+frameWidth; y++) {
+            for (var y = frameWidth; y < height + frameWidth; y++)
+            {
                 var r = 1 - (float)y / denom;
                 var col = new Color(r, r, r);
-                for (var x = frameWidth; x < width+frameWidth; x++) {
+                for (var x = frameWidth; x < width + frameWidth; x++)
+                {
                     tex.SetPixel(x, height - 1 - y, col);
                 }
                 // フレーム(左右)
-                for (var x = 0; x < frameWidth; x++) {
+                for (var x = 0; x < frameWidth; x++)
+                {
                     tex.SetPixel(x, height - 1 - y, frameCol);
                 }
-                for (var x = width+frameWidth; x < frameWidth+frameWidth*2; x++) {
+                for (var x = width + frameWidth; x < frameWidth + frameWidth * 2; x++)
+                {
                     tex.SetPixel(x, height - 1 - y, frameCol);
                 }
             }
             // フレーム(上下)
-            for (var x = 0; x < width + frameWidth * 2; x++) {
-                for (var y = 0; y < frameWidth; y++) {
+            for (var x = 0; x < width + frameWidth * 2; x++)
+            {
+                for (var y = 0; y < frameWidth; y++)
+                {
                     tex.SetPixel(x, y, frameCol);
                 }
-                for (var y = height + frameWidth; y < height + frameWidth * 2; y++) {
+                for (var y = height + frameWidth; y < height + frameWidth * 2; y++)
+                {
                     tex.SetPixel(x, y, frameCol);
                 }
             }
@@ -496,21 +612,29 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.UI {
         /// <param name="width">画像幅</param>
         /// <param name="height">画像高さ</param>
         /// <returns></returns>
-        private static Texture2D CreateRGBMapTex(int width, int height) {
+        private static Texture2D CreateRGBMapTex(int width, int height)
+        {
             var tex = new Texture2D(width, height, TextureFormat.ARGB32, false);
-            var centerX = width/2;
-            var centerY = height/2; // Mathf.FloorToInt(height/2f);
+            var centerX = width / 2;
+            var centerY = height / 2; // Mathf.FloorToInt(height/2f);
             var radius = Math.Min(centerX, centerY);
             var centerCol = Color.white;
-            for (var y = 0; y < height; y++) {
-                for (var x = 0; x < width; x++) {
+            for (var y = 0; y < height; y++)
+            {
+                for (var x = 0; x < width; x++)
+                {
                     var dist = Distance(x, y, centerX, centerY);
-                    var distRatio = dist/radius;
-                    if (1f < distRatio) {
+                    var distRatio = dist / radius;
+                    if (1f < distRatio)
+                    {
                         tex.SetPixel(x, y, Empty);
-                    } else if (Equals(distRatio, 0f)) {
+                    }
+                    else if (Equals(distRatio, 0f))
+                    {
                         tex.SetPixel(x, y, centerCol);
-                    } else {
+                    }
+                    else
+                    {
                         var vecX = x - centerX;
                         var vecY = y - centerY;
                         var edgeCol = GetEdgeColor(vecX, vecY, dist);
@@ -525,42 +649,58 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.UI {
         }
 
         // 外周の色を取得する.
-        private static Color GetEdgeColor(float vecX, float vecY, float dist) {
+        private static Color GetEdgeColor(float vecX, float vecY, float dist)
+        {
             var theta = (float)Math.Acos(vecX / dist);
             if (vecY > 0) theta = -theta;
 
             theta *= RANGE_UNIT;
-            if (-0.5f <= theta && theta < 0.5f) {
+            if (-0.5f <= theta && theta < 0.5f)
+            {
                 var rotRatio = 0.5f - theta;
                 return new Color(rotRatio, 0f, 1f);
-            } else if (0.5f <= theta && theta < 1.5f) {
+            }
+            else if (0.5f <= theta && theta < 1.5f)
+            {
                 var rotRatio = theta - 0.5f;
                 return new Color(0f, rotRatio, 1f);
-            } else if (1.5f <= theta && theta < 2.5f) {
+            }
+            else if (1.5f <= theta && theta < 2.5f)
+            {
                 var rotRatio = 2.5f - theta;
                 return new Color(0f, 1f, rotRatio);
-            } else if (2.5f <= theta && theta <= 3f) {
+            }
+            else if (2.5f <= theta && theta <= 3f)
+            {
                 var rotRatio = theta - 2.5f;
                 return new Color(rotRatio, 1f, 0f);
-            } else if (-3f <= theta && theta < - 2.5f) {
+            }
+            else if (-3f <= theta && theta < -2.5f)
+            {
                 var rotRatio = theta + 3.5f;
                 return new Color(rotRatio, 1f, 0f);
-            } else if (-2.5f <= theta && theta < -1.5f) {
+            }
+            else if (-2.5f <= theta && theta < -1.5f)
+            {
                 var rotRatio = -1.5f - theta;
                 return new Color(1f, rotRatio, 0f);
-            } else {//if (-1.5f <= theta && theta < -0.5f) {
+            }
+            else
+            {//if (-1.5f <= theta && theta < -0.5f) {
                 var rotRatio = theta + 1.5f;
                 return new Color(1f, 0f, rotRatio);
             }
         }
 
-        private static float Distance(int x1, int y1, int x2, int y2) {
+        private static float Distance(int x1, int y1, int x2, int y2)
+        {
             var dX = x1 - x2;
             var dY = y1 - y2;
             return (float)Math.Sqrt(dX * dX + dY * dY);
         }
 
-        private static bool Equals(float f1, float f2) {
+        private static bool Equals(float f1, float f2)
+        {
             return Math.Abs(f1 - f2) < 0.001f;
         }
 
@@ -569,14 +709,16 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.UI {
         /// <param name="c2">色2</param>
         /// <param name="ratio">割合(0-1)</param>
         /// <returns>色</returns>
-        private static Color GetColor(ref Color c1, ref Color c2, float ratio) {
+        private static Color GetColor(ref Color c1, ref Color c2, float ratio)
+        {
             var r = c1.r + ratio * (c2.r - c1.r);
             var g = c1.g + ratio * (c2.g - c1.g);
             var b = c1.b + ratio * (c2.b - c1.b);
             return new Color(r, g, b);
         }
- 
-        private static float DiffColor(Color c1, Color c2) {
+
+        private static float DiffColor(Color c1, Color c2)
+        {
             return Math.Abs(c1.r - c2.r) + Math.Abs(c1.g - c2.g) + Math.Abs(c1.b - c2.b);
         }
     }

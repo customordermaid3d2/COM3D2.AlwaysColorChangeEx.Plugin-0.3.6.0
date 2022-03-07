@@ -135,9 +135,11 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.Util {
             var bytes = new byte[stream.Length];
             stream.Read(bytes, 0, bytes.Length);
             var tex2D = new Texture2D(1, 1, TextureFormat.RGBA32, false);
-            tex2D.LoadImage(bytes);
-            tex2D.wrapMode = TextureWrapMode.Clamp;
+            var b=tex2D.LoadImage(bytes);
+            
+            LogUtil.Debug("stream.Length :", stream.Length , b);
 
+            tex2D.wrapMode = TextureWrapMode.Clamp;
             return tex2D;
         }
 
