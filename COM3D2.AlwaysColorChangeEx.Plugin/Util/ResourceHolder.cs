@@ -32,9 +32,7 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.Util
             get
             {
                 return pictImage ? pictImage : (pictImage = LoadTex("picture"
-#if v2022
-                , Properties.Resources.picture
-#endif
+
                 ));
             }
         }
@@ -43,9 +41,7 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.Util
             get
             {
                 return fileImage ? dirImage : (fileImage = LoadTex("file"
-#if v2022
-                , Properties.Resources.file
-#endif
+
                 ));
             }
         }
@@ -54,9 +50,7 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.Util
             get
             {
                 return dirImage ? dirImage : (dirImage = LoadTex("folder"
-#if v2022
-                , Properties.Resources.folder
-#endif
+
                 ));
             }
         }
@@ -65,9 +59,7 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.Util
             get
             {
                 return copyImage ? copyImage : (copyImage = LoadTex("copy"
-#if v2022
-                , Properties.Resources.copy
-#endif
+
                 ));
             }
         }
@@ -76,9 +68,7 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.Util
             get
             {
                 return pasteImage ? pasteImage : (pasteImage = LoadTex("paste"
-#if v2022
-                , Properties.Resources.paste
-#endif
+
                 ));
             }
         }
@@ -87,9 +77,7 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.Util
             get
             {
                 return plusImage ? plusImage : (plusImage = LoadTex("plus"
-#if v2022
-                , Properties.Resources.plus
-#endif
+
                 ));
             }
         }
@@ -98,9 +86,7 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.Util
             get
             {
                 return minusImage ? minusImage : (minusImage = LoadTex("minus"
-#if v2022
-                , Properties.Resources.minus
-#endif
+
                 ));
             }
         }
@@ -109,9 +95,7 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.Util
             get
             {
                 return checkonImage ? checkonImage : (checkonImage = LoadTex("checkon"
-#if v2022
-                , Properties.Resources.checkon
-#endif
+
                 ));
             }
         }
@@ -120,9 +104,7 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.Util
             get
             {
                 return checkoffImage ? checkoffImage : (checkoffImage = LoadTex("checkoff"
-#if v2022
-                , Properties.Resources.checkoff
-#endif
+
                 ));
             }
         }
@@ -155,27 +137,18 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.Util
         */
 
         public Texture2D LoadTex(string name
-#if v2022
-            , Bitmap bmp
-#endif
+
             )
         {
             try
             {
-#if v2022
-                using (MemoryStream fs = new MemoryStream())
-                {
-                    bmp.Save(fs, ImageFormat.Png);
-#elif ori
+
                 using (var fs = asmbl.GetManifestResourceStream("CM3D2.AlwaysColorChangeEx.Plugin.Resources." + name + ".png"))
                 {
-#else
-                using (var fs = asmbl.GetManifestResourceStream(name + ".png"))
-                {
-#endif
+
                     var tex2d = fileUtil.LoadTexture(fs);
                     tex2d.name = name; ;
-                    LogUtil.Debug("resource file image loaded :", name );
+                    LogUtil.Debug("resource file image loaded :", name);
                     return tex2d;
                 }
             }

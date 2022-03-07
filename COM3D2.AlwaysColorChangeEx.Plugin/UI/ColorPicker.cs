@@ -217,9 +217,7 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.UI
                 if (circleTex == null)
                 {
                     circleTex = ResourceHolder.Instance.LoadTex("circle"
-#if v2022
-                        , Properties.Resources.circle
-#endif
+
                         );
                 }
                 return circleTex;
@@ -233,9 +231,7 @@ namespace CM3D2.AlwaysColorChangeEx.Plugin.UI
                 if (crossTex == null)
                 {
                     crossTex = ResourceHolder.Instance.LoadTex("cross"
-#if v2022
-                        , Properties.Resources.cross
-#endif
+
                         );
                 }
                 return crossTex;
